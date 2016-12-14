@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/header" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:id="@+id/add_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="输入用户名搜索"
+            android:paddingRight="25dp" />
+
+        <ImageView
+            android:id="@+id/add_searchBtn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignRight="@id/add_edit"
+            android:layout_centerVertical="true"
+            android:src="@drawable/search_normal" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/add_recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/add_nodata"
+        android:src="@drawable/nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

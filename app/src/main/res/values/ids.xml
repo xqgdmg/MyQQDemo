@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="back" type="id">back</item>
+    <item name="add" type="id">add</item>
+    <item name="my_title" type="id">my_title</item>
+</resources>
