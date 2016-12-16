@@ -27,7 +27,9 @@ import com.test.MyQQ.listener.MymessageListener;
 import itheima.com.qqDemo.R;
 
 /**
- * Created by ThinkPad on 2016/8/14.
+ * 聊天
+ * 1 加载聊天记录
+ * 2 监听消息
  */
 public class ChatActivity extends BaseActivity implements TextWatcher, TextView.OnEditorActionListener {
 
@@ -46,11 +48,16 @@ public class ChatActivity extends BaseActivity implements TextWatcher, TextView.
         //获取当前要聊天的对象
         chat_to = getIntent().getStringExtra("chat_to");
         my_title.setText("正在与" + chat_to + "聊天");
+
         //加载聊天消息
         loadMessages();
+        // 监听消息
         initMessageReceiveListener();
     }
-    //初始化消息接收监听
+
+    /**
+     * 初始化消息接收监听
+     */
     private void initMessageReceiveListener() {
         //适配器设计模式
         //收到新消息
@@ -71,6 +78,9 @@ public class ChatActivity extends BaseActivity implements TextWatcher, TextView.
         EMClient.getInstance().chatManager().addMessageListener(listener);
     }
 
+    /**
+     * 移除接收消息监听
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -78,13 +88,20 @@ public class ChatActivity extends BaseActivity implements TextWatcher, TextView.
         EMClient.getInstance().chatManager().removeMessageListener(listener);
     }
 
-    //加载聊天记录
+    /**
+     * 加载聊天记录
+     */
     private void loadMessages() {
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(chat_to);
-//获取此会话的所有消息
-        if (conversation == null) return;
+        //获取此会话的所有消息
+        if (conversation == null) {
+            return;
+        }
+
         //标注所有消息为已读
         conversation.markAllMessagesAsRead();
+
+        // 通过 conversation 获得消息
         List<EMMessage> loadMessages = conversation.getAllMessages();
         messages.clear();
         messages.addAll(loadMessages);
@@ -109,6 +126,7 @@ public class ChatActivity extends BaseActivity implements TextWatcher, TextView.
                 System.out.println("变化前的高度：" + height);
             }
         });
+
         //添加输入框焦点变化监听
         chat_edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -238,7 +256,7 @@ public class ChatActivity extends BaseActivity implements TextWatcher, TextView.
         chat_recycleView.scrollToPosition(messages.size() - 1);
         //清空输入框
         chat_edit.getText().clear();
-//发送消息
+        //发送消息
         EMClient.getInstance().chatManager().sendMessage(message);
     }
 

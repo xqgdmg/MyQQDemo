@@ -27,7 +27,10 @@ import com.test.MyQQ.util.ThreadUtil;
 import itheima.com.qqDemo.R;
 
 /**
- * Created by ThinkPad on 2016/8/13.
+ * 添加好友
+ * 用到 EventBus onEventMainThread 收到更新联系人请求，更新联系人
+ * 1 首先是 从环信中 加载网络联系人
+ * 2 用户信息是 在 Bmob 中存储
  */
 public class AddActivity extends BaseActivity implements TextView.OnEditorActionListener {
 
@@ -43,10 +46,16 @@ public class AddActivity extends BaseActivity implements TextView.OnEditorAction
     private AddAdapter adapter;
     private String currentUser;
     private ProgressDialog dialog;
+
     public void onEventMainThread(String msg){
         toast("收到更新联系人请求");
-        loadContactFromServer();
+        loadContactFromHX();// 从环信加载联系人
     }
+
+    /**
+     * onDestroy
+     * EventBus 解除注册
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -59,14 +68,16 @@ public class AddActivity extends BaseActivity implements TextView.OnEditorAction
         EventBus.getDefault().register(this);
         //初始化标题
         main_title.setText("添加好友");
-        //获取当前用户
+        //获取当前用户，用于去 Bmob 中查询数据
         currentUser = EMClient.getInstance().getCurrentUser();
-        //加载联系人
-        loadContactFromServer();
+        //从环信加载联系人
+        loadContactFromHX();
     }
 
-    //加载网络联系人
-    private void loadContactFromServer() {
+    /**
+     * 从环信中 加载网络联系人
+     */
+    private void loadContactFromHX() {
         ThreadUtil.runOnNewThread(new Runnable() {
             @Override
             public void run() {
@@ -105,7 +116,10 @@ public class AddActivity extends BaseActivity implements TextView.OnEditorAction
             }
         });
     }
-    //添加好友
+
+    /**
+     * 添加好友
+     */
     private void addContact(final String username) {
         ThreadUtil.runOnNewThread(new Runnable() {
             @Override
@@ -144,6 +158,10 @@ public class AddActivity extends BaseActivity implements TextView.OnEditorAction
         return R.layout.activity_add;
     }
 
+    /**
+     * 点击事件
+     * 去 Bmob 中查询好友
+     */
     @Override
     protected void processClick(View v) {
         if (v.getId() == R.id.add_searchBtn) {
@@ -152,7 +170,7 @@ public class AddActivity extends BaseActivity implements TextView.OnEditorAction
                 toast("请输入用户名进行搜索");
             } else {
                 //搜索好友
-                searchContact(key);
+                searchBmobContact(key);
             }
         }
     }
@@ -166,14 +184,17 @@ public class AddActivity extends BaseActivity implements TextView.OnEditorAction
                 toast("请输入用户名进行搜索");
             } else {
                 //搜索好友
-                searchContact(key);
+                searchBmobContact(key);
             }
         }
         return true;
     }
 
-    //搜索好友
-    private void searchContact(String key) {
+    /**
+     * 通过 currentUser 的 username ，去 Bmob 中查询好友
+     * 用户信息 students 是存在 Bmob 的
+     */
+    private void searchBmobContact(String key) {
         //添加对话框
         dialog = makeDialog("正在查询");
         dialog.show();

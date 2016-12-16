@@ -6,7 +6,7 @@ import com.hyphenate.chat.EMMessage;
 import java.util.List;
 
 /**
- * Created by ThinkPad on 2016/8/14.
+ * 接口适配器的模式，实现不用写 接口中 不想要的方法
  */
 public class MymessageListener implements EMMessageListener {
     @Override

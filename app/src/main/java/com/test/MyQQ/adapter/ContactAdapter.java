@@ -14,11 +14,12 @@ import com.test.MyQQ.util.StringUtil;
 import itheima.com.qqDemo.R;
 
 /**
- * Created by ThinkPad on 2016/8/13.
+ * 联系人
+ *
  */
 public class ContactAdapter extends BaseAdapter implements SectionIndexer{
     private ArrayList<String> contacts;
-    private SparseIntArray intArray = new SparseIntArray();
+    private SparseIntArray intArray = new SparseIntArray();// SparseIntArray的用法
     private SparseIntArray intArrayB = new SparseIntArray();
     public ContactAdapter(ArrayList<String> contacts) {
         this.contacts = contacts;
@@ -49,24 +50,15 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
         //设置用户名
         holder.contact_item_name.setText(contacts.get(position));
-        //判断当前是否要显示分割
+
+        //根据首字母，判断当前是否要显示分割
         String currentC = StringUtil.getFirstC(contacts.get(position));
         holder.contact_item_sectionName.setText(currentC);
 
-
-//        if (position == 0) {
-//        } else {
-//            String lastC = StringUtil.getFirstC(contacts.get(position - 1));
-//            if (lastC.equals(currentC)) {
-//            } else {
-//                //隐藏sectionname
-//                holder.contact_item_sectionName.setVisibility(View.GONE);
-//            }
-//        }
-
-
+        // 和上一个联系人比较首字母，显示字母的横条
         if (position != 0 && currentC.equals(StringUtil.getFirstC(contacts.get(position - 1)))){
             holder.contact_item_sectionName.setVisibility(View.GONE);
         }else {
@@ -75,6 +67,9 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
         return convertView;
     }
 
+    /**
+     * SlidBar 中的方法
+     */
     @Override
     public String[] getSections() {
         //清空intArray
@@ -96,11 +91,17 @@ public class ContactAdapter extends BaseAdapter implements SectionIndexer{
         return sections.toArray(new String[sections.size()]);
     }
 
+    /**
+     * SlidBar 中的方法
+     */
     @Override
     public int getPositionForSection(int sectionIndex) {
         return intArray.get(sectionIndex);
     }
 
+    /**
+     * ？？？
+     */
     @Override
     public int getSectionForPosition(int position) {
         return intArrayB.get(position);

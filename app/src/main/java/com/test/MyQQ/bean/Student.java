@@ -3,7 +3,7 @@ package com.test.MyQQ.bean;
 import cn.bmob.v3.BmobObject;
 
 /**
- * Created by ThinkPad on 2016/8/12.
+ * 用于在 Bmob 后端云中存用户数据
  */
 public class Student extends BmobObject {
     private String username;

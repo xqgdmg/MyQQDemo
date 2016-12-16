@@ -24,16 +24,15 @@ import com.test.MyQQ.ui.activity.ChatActivity;
 import itheima.com.qqDemo.R;
 
 /**
- * Created by ThinkPad on 2016/8/12.
+ * 会话界面
+ * 不监听 新会话 也就是不写 EMClient.getInstance().chatManager().addMessageListener(messageListener);
+ * 处理 从环信加载所有会话
  */
 public class ConversationFragment extends BaseFragment {
 
     private RecyclerView chat_recycleView;
     private ArrayList<EMConversation> conversations = new ArrayList<EMConversation>();
     private ConversationAdapter adapter;
-    //    private EMConversationListener listener;
-    private Handler handler = new Handler();
-    private MymessageListener messageListener;
 
     @Override
     protected void initHeader(ImageView back, TextView my_title, ImageView add) {
@@ -44,75 +43,38 @@ public class ConversationFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-//        loadAllConversation();
-        //加载新会话监听
-        initConversationChangeListener();
-        //添加消息监听
-//        initMessageListener();
     }
 
-    //消息监听
-    private void initMessageListener() {
-        messageListener = new MymessageListener() {
-            @Override
-            public void onMessageReceived(List<EMMessage> list) {
-                toast("接收到新消息");
-                //接收到新消息  重新加载会话
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadAllConversation();
-                    }
-                });
-            }
-        };
-        EMClient.getInstance().chatManager().addMessageListener(messageListener);
-    }
 
-    //会话变化监听
-    private void initConversationChangeListener() {
-        //新会话
-//        listener = new EMConversationListener() {
-//            @Override
-//            public void onCoversationUpdate() {
-//                //新会话 重新加载会话
-//                handler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        loadAllConversation();
-//                    }
-//                });
-//
-//            }
-//        };
-//        EMClient.getInstance().chatManager().addConversationListener(listener);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EMClient.getInstance().chatManager().removeMessageListener(messageListener);
-//        EMClient.getInstance().chatManager().removeConversationListener(listener);
-    }
-
-    //加载所有的会话
+    /**
+     * 从环信加载所有的会话
+     * 会话排除空会话
+     * 会话进行排序
+     */
     public void loadAllConversation() {
+
         Map<String, EMConversation> allConversations = EMClient.getInstance().chatManager().getAllConversations();
         conversations.clear();
         conversations.addAll(allConversations.values());
         System.out.println("conversation.size="+conversations.size());
+
+        /**
+         * 避免消息出现null，造成空指针
+         */
         for (int i = 0; i < conversations.size(); i++) {
             if(conversations.get(i).getLastMessage()==null){
                 conversations.remove(i);
             }
         }
+
         if(conversations.size()>1) {
             //会话排序
             Collections.sort(conversations, new Comparator<EMConversation>() {
                 @Override
-                public int compare(EMConversation lhs, EMConversation rhs) {
+                public int compare(EMConversation lhs, EMConversation rhs) {// 集合里面的数据 泛型
                     EMMessage aMessage = lhs.getLastMessage();
                     EMMessage bMessage = rhs.getLastMessage();
+
                     System.out.println("AMESSAGE="+aMessage+"bmessage:"+bMessage);
                     return (int) (bMessage.getMsgTime() - aMessage.getMsgTime());
                 }
@@ -122,6 +84,10 @@ public class ConversationFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * onResume
+     * 从环信加载所有会话
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -129,6 +95,9 @@ public class ConversationFragment extends BaseFragment {
         loadAllConversation();
     }
 
+    /**
+     * 条目点击 进入聊天的页面
+     */
     @Override
     protected void initListener() {
         adapter = new ConversationAdapter(conversations);

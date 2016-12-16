@@ -12,7 +12,8 @@ import com.test.MyQQ.ui.activity.LoginActivity;
 import itheima.com.qqDemo.R;
 
 /**
- * Created by ThinkPad on 2016/8/12.
+ * 处理点击事件
+ * 如果环信 退出登录成功  进入登录界面
  */
 public class PluginFragment extends BaseFragment {
 
@@ -50,6 +51,9 @@ public class PluginFragment extends BaseFragment {
         return R.layout.fragment_plugin;
     }
 
+    /**
+     * 点击事件
+     */
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.plugin_logout){

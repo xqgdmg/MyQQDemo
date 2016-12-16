@@ -36,12 +36,14 @@ public class MainActivity extends BaseActivity {
 
         //初始化界面
         initFragment();
+
         //添加联系人监听
         setContactListener();
+
         //添加消息监听
         setMessageListener();
-        //更新未读消息
-//        handleUnread();
+
+        //更新未读消息 onResume
     }
 
     @Override
@@ -93,6 +95,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 移除消息监听
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

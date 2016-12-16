@@ -19,13 +19,17 @@ import itheima.com.qqDemo.R;
 
 
 /**
- * Created by ThinkPad on 2016/8/14.
+ * 聊天
+ * 两种不同的布局，通过 EMMessage.Direct.SEND 判断
+ *
  */
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
+
     private ArrayList<EMMessage> messages;
     public ChatAdapter(ArrayList<EMMessage> messages){
         this.messages = messages;
     }
+
     @Override
     public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
@@ -38,6 +42,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         }
         return new ChatViewHolder(view);
     }
+
     //发送消息  0  接收receive  1
     @Override
     public int getItemViewType(int position) {
@@ -53,19 +58,27 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         EMMessage message = messages.get(position);
         //处理消息时间
         holder.chat_item_time.setText(DateUtils.getTimestampString(new Date(message.getMsgTime())));
-        if(position==0||!DateUtils.isCloseEnough(messages.get(position - 1).getMsgTime(), messages.get(position).getMsgTime())){
+        if(position==0 || !DateUtils.isCloseEnough(messages.get(position - 1).getMsgTime(), // DateUtils 属于环信的 API,判断两条消息的时间间隔
+                messages.get(position).getMsgTime())){
+
             holder.chat_item_time.setVisibility(View.VISIBLE);
         }else {
             holder.chat_item_time.setVisibility(View.GONE);
         }
+
         //处理消息显示
         //判断是否为文本消息
         if(message.getType()== EMMessage.Type.TXT){
             EMTextMessageBody body = (EMTextMessageBody) message.getBody();
             holder.chat_item_msg.setText(body.getMessage());
         }
-        //处理消息发送状态
-        if(holder.chat_item_status==null) return;
+
+        //处理消息发送状态，发送消息左边的转圈圈图片，由于后面没有其他的方法，所以是直接 return了
+        if(holder.chat_item_status == null){
+            return;
+        }
+
+        // 根据环信定义的消息状态，处理发送圈圈的效果
         switch (message.status()){
             case INPROGRESS:
                 //设置发送动画

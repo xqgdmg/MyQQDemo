@@ -18,11 +18,13 @@ import itheima.com.qqDemo.R;
 
 
 /**
- * Created by ThinkPad on 2016/8/14.
+ * 会话
+ *
  */
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
     private ArrayList<EMConversation> conversations;
     private ConversationItemClickListener conversationItemClickListener;
+
     public interface ConversationItemClickListener{
         void onItemClick(String username);
     }
@@ -40,28 +42,36 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public void onBindViewHolder(ConversationViewHolder holder, int position) {
-        //聊天对象
+
+        //聊天对象 EMConversation
         EMConversation conversation = conversations.get(position);
         final String userName = conversation.getUserName();
         holder.conversation_name.setText(userName);
-        //最后一条消息
+
+        //最后一条消息 conversation.getLastMessage
         EMMessage lastMessage = conversation.getLastMessage();
+
         //判断最后一条消息是否为文本消息
         if(lastMessage.getType()== EMMessage.Type.TXT){
             EMTextMessageBody body = (EMTextMessageBody) lastMessage.getBody();
             holder.conversation_last_msg.setText(body.getMessage());
         }
+
         //最后一条消息时间
         holder.conversation_time.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
+
         //未读消息个数
         int unreadMsgCount = conversation.getUnreadMsgCount();
         System.out.println("当前用胡："+userName+"未读消息个数:"+unreadMsgCount);
+
+        // 有未读消息才显示 未读消息数量的提示，一个 TextView 的图片
         if(unreadMsgCount==0){
             holder.conversation_unread.setVisibility(View.INVISIBLE);
         }else {
             holder.conversation_unread.setText(unreadMsgCount+"");
             holder.conversation_unread.setVisibility(View.VISIBLE);
         }
+
         //当前条目设置点击事件
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -28,7 +28,8 @@ import com.test.MyQQ.view.ContactView;
 import itheima.com.qqDemo.R;
 
 /**
- * Created by ThinkPad on 2016/8/12.
+ * 联系人
+ *
  */
 public class ContactFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
     private ArrayList<String> contacts = new ArrayList<String>();
@@ -61,7 +62,11 @@ public class ContactFragment extends BaseFragment implements SwipeRefreshLayout.
         loadContactsFromServer();
     }
 
-    //从数据库中加载联系人数据
+    /**
+     * 从本地数据库中加载联系人数据
+     * 通过当前登录用户的用户名进行查询
+     * 查询结果进行排序
+     */
     private void loadContactsFromDB() {
         //contacts集合清空
         contacts.clear();
@@ -72,19 +77,27 @@ public class ContactFragment extends BaseFragment implements SwipeRefreshLayout.
         adapter.notifyDataSetChanged();
     }
 
-    //集合排序
+    /**
+     * 集合排序 Collections
+     * compare
+     */
     public void sort() {
         Collections.sort(contacts, new Comparator<String>() {
             @Override
             public int compare(String lhs, String rhs) {
                 String lhsC = StringUtil.getFirstC(lhs);
                 String rhsC = StringUtil.getFirstC(rhs);
-                return lhsC.compareTo(rhsC);
+                return lhsC.compareTo(rhsC);// String 类的 compareTo
             }
         });
     }
 
-    //从环信上加载联系人
+    /**
+     * 从环信上加载联系人
+     * 和数据库 操作的是同一个集合
+     * 同样需要排序
+     * 并加入到数据库，更新数据库的联系人
+     */
     public void loadContactsFromServer() {
         ThreadUtil.runOnNewThread(new Runnable() {
             @Override
@@ -148,6 +161,10 @@ public class ContactFragment extends BaseFragment implements SwipeRefreshLayout.
         return R.layout.fragment_contact;
     }
 
+    /**
+     * 点击事件
+     *
+     */
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.add){
@@ -165,14 +182,19 @@ public class ContactFragment extends BaseFragment implements SwipeRefreshLayout.
 //        contactView.setSelection(0);
     }
 
-    //联系人条目长按事件
+    /**
+     * 联系人条目长按事件
+     * 删除好友
+     */
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         showDeleteDialog(position);
         return true;
     }
 
-    //显示删除联系人对话框
+    /**
+     * 显示删除联系人对话框
+     */
     private void showDeleteDialog(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("警告");
@@ -187,7 +209,10 @@ public class ContactFragment extends BaseFragment implements SwipeRefreshLayout.
         }).show();
     }
 
-    //删除联系人
+    /**
+     * 删除联系人
+     * 从环信中删除
+     */
     private void deleContact(final int position) {
         ThreadUtil.runOnNewThread(new Runnable() {
             @Override
@@ -205,7 +230,10 @@ public class ContactFragment extends BaseFragment implements SwipeRefreshLayout.
             }
         });
     }
-    //条目点击
+
+    /**
+     * 条目点击
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //进入聊天界面

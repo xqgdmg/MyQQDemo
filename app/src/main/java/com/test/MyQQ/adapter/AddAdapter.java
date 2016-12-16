@@ -13,7 +13,9 @@ import com.test.MyQQ.bean.Student;
 import itheima.com.qqDemo.R;
 
 /**
- * Created by ThinkPad on 2016/8/13.
+ * 添加好友
+ * 处理 contacts 中包含了想要的加的用户的 Username ，提示已经是好友
+ *
  */
 public class AddAdapter extends RecyclerView.Adapter<AddAdapter.AddViewHolder> {
     private ArrayList<Student> students;

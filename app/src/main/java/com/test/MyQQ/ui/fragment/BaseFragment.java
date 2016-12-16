@@ -16,7 +16,7 @@ import com.test.MyQQ.util.ToastUtil;
 import itheima.com.qqDemo.R;
 
 /**
- * Created by ThinkPad on 2016/8/12.
+ * 共同的控件 监听 数据的方法
  */
 public abstract class BaseFragment extends Fragment implements View.OnClickListener{
 
@@ -29,9 +29,19 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         view = inflater.inflate(getLayoutId(),container,false);
         return view;
     }
+
+    /**
+     * findViewById 写好了 view.
+     */
     public View findViewById(int id){
         return  view.findViewById(id);
     }
+
+    /**
+     * onActivityCreated
+     * 当 Activity 创建成功后 initView， initListener， initData
+     * 并找到头中的控件
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -45,9 +55,16 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         TextView my_title = (TextView) findViewById(R.id.my_title);
         initHeader(back,my_title,add); 
     }
-    //处理头布局
-    protected abstract void initHeader(ImageView back, TextView my_title, ImageView add);
 
+    /**
+     * 抽象方法必须实现
+     * 处理头布局
+     * initData
+     * initListener
+     * initView
+     * getLayoutId
+     */
+    protected abstract void initHeader(ImageView back, TextView my_title, ImageView add);
 
     protected abstract void initData();
 
@@ -55,13 +72,19 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected abstract void initView();
 
-    //获取布局id
     protected abstract int getLayoutId();
-    //打印log
+
+
+    /**
+     * 统一处理 打印log
+     */
     protected void logD(String msg){
-        LogUtil.logD(getClass().getName(), msg);
+        LogUtil.logD(getClass().getName(), msg);// TAG动态生成
     }
-    //弹toast
+
+    /**
+     * 统一处理 在UI线程中 弹toast
+     */
     protected void toast(final String msg){
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -70,13 +93,19 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             }
         });
     }
-    //创建dialog
+
+    /**
+     * 创建dialog
+     */
     protected ProgressDialog makeDialog(String msg){
         ProgressDialog dialog = new ProgressDialog(getContext());
         dialog.setMessage(msg);
         return dialog;
     }
-    //开启新activity
+
+    /**
+     * 开启新activity 是否关闭自己
+     */
     public void startNewActivity(Class clazz,boolean finish){
         Intent intent = new Intent(getContext(),clazz);
         startActivity(intent);
