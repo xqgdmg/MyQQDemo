@@ -27,7 +27,7 @@
         android:textSize="40dp"
         android:visibility="gone" />
 
-    <com.test.MyQQ.view.SlidBar
+    <com.test.myqq.view.SlidBar
         android:id="@+id/contact_slidbar"
         android:layout_width="30dp"
         android:layout_height="match_parent"

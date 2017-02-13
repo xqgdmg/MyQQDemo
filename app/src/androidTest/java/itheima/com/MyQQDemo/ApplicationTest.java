@@ -3,7 +3,7 @@ package itheima.com.MyQQDemo;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
-import com.test.MyQQ.util.StringUtil;
+import com.test.myqq.util.StringUtil;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
